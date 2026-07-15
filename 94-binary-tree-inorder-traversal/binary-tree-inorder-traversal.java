@@ -14,14 +14,43 @@
  * }
  */
 class Solution {
-    List<Integer> list = new ArrayList<>();
+    //List<Integer> list = new ArrayList<>();
     public List<Integer> inorderTraversal(TreeNode root) {
-        if(root == null) return list;
+        // if(root == null) return list;
 
-        inorderTraversal(root.left);
-        list.add(root.val);
-        inorderTraversal(root.right);
+        // inorderTraversal(root.left);
+        // list.add(root.val);
+        // inorderTraversal(root.right);
         
+        // return list;
+
+        //Using Morris Inorder Traversal
+        List<Integer> list = new ArrayList<>();
+        TreeNode curr = root;
+
+        while(curr != null){
+            if(curr.left == null){
+                list.add(curr.val);
+                curr = curr.right;
+            }
+            else{
+                TreeNode prev = curr.left;
+                // Find the rightmost node in the left subtree.
+                while(prev.right != null && prev.right != curr){
+                    prev = prev.right;
+                }
+
+                if(prev.right == null){
+                    prev.right = curr;
+                    curr = curr.left;
+                } 
+                else{
+                    prev.right = null;
+                    list.add(curr.val);
+                    curr = curr.right;
+                }
+            }
+        }
         return list;
     }
 }
