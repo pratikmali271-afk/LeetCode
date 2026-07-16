@@ -25,29 +25,42 @@ class Solution {
     public Node connect(Node root) {
         if(root == null) return null;
 
-        Queue<Node> q = new LinkedList<>();
-        q.offer(root);
+        // Queue<Node> q = new LinkedList<>();
+        // q.offer(root);
 
-        while(!q.isEmpty()){
-            int n = q.size();
+        // while(!q.isEmpty()){
+        //     int n = q.size();
 
-            int i = 0;
-            while(i < n){
-                Node temp = q.poll();
+        //     int i = 0;
+        //     while(i < n){
+        //         Node temp = q.poll();
 
-                if(i == n - 1){
-                    temp.next = null;
-                }
-                else{
-                    temp.next = q.peek();
-                }
+        //         if(i == n - 1){
+        //             temp.next = null;
+        //         }
+        //         else{
+        //             temp.next = q.peek();
+        //         }
 
-                if(temp.left != null) q.offer(temp.left);
-                if(temp.right != null) q.offer(temp.right);
+        //         if(temp.left != null) q.offer(temp.left);
+        //         if(temp.right != null) q.offer(temp.right);
 
-                i++;
+        //         i++;
+        //     }
+        // }
+
+        // Extra Space: O(1)
+        if(root.left != null){
+            root.left.next = root.right;
+
+            if (root.next != null) {
+                root.right.next = root.next.left;
             }
         }
+
+        connect(root.left);
+        connect(root.right);
+
         return root;
     }
 }
