@@ -15,17 +15,17 @@
  */
 class Solution {
 
-    // List<Integer> list = new ArrayList<>();
+    List<Integer> list = new ArrayList<>();
 
-    // public List<Integer> postorderTraversal(TreeNode root) {
-    //     if(root == null) return list;
+    public List<Integer> postorderTraversal(TreeNode root) {
+        if(root == null) return list;
 
-    //     postorderTraversal(root.left);
-    //     postorderTraversal(root.right);
-    //     list.add(root.val);
+        postorderTraversal(root.left);
+        postorderTraversal(root.right);
+        list.add(root.val);
 
-    //     return list;  
-    // }
+        return list;  
+    }
 
     //Using 2 stack
     // public List<Integer> postorderTraversal(TreeNode root) {
@@ -52,37 +52,37 @@ class Solution {
     // }
 
     //Using 1 stack
-    public List<Integer> postorderTraversal(TreeNode root) {
-        List<Integer> list = new ArrayList<>();
+    // public List<Integer> postorderTraversal(TreeNode root) {
+    //     List<Integer> list = new ArrayList<>();
 
-        if(root == null)
-            return list;
+    //     if(root == null)
+    //         return list;
 
-        Stack<TreeNode> st = new Stack<>();
+    //     Stack<TreeNode> st = new Stack<>();
 
-        TreeNode curr = root;
-        while(curr != null || !st.isEmpty()){
-            if(curr != null){
-                st.push(curr);
-                curr = curr.left;
-            }
-            else{
-                TreeNode temp = st.peek().right;
-                if(temp == null){
-                    temp = st.pop();
-                    list.add(temp.val);
+    //     TreeNode curr = root;
+    //     while(curr != null || !st.isEmpty()){
+    //         if(curr != null){
+    //             st.push(curr);
+    //             curr = curr.left;
+    //         }
+    //         else{
+    //             TreeNode temp = st.peek().right;
+    //             if(temp == null){
+    //                 temp = st.pop();
+    //                 list.add(temp.val);
 
-                    while(!st.isEmpty() && temp == st.peek().right){
-                        temp = st.pop();
-                        list.add(temp.val);
-                    }
-                }
-                else{
-                    curr = temp;
-                }
-            }
-        }
+    //                 while(!st.isEmpty() && temp == st.peek().right){
+    //                     temp = st.pop();
+    //                     list.add(temp.val);
+    //                 }
+    //             }
+    //             else{
+    //                 curr = temp;
+    //             }
+    //         }
+    //     }
 
-        return list;
-    }
+    //     return list;
+    // }
 }
