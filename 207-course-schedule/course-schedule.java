@@ -6,11 +6,10 @@ class Solution {
         for(int neigh : adj.get(node)){
             if(!vis[neigh]){
                 if(dfs(neigh, adj, vis, pathVis)) return true;
-            } 
-            else if(pathVis[neigh]){
-                return true;
             }
+            else if(pathVis[neigh]) return true;
         }
+
         pathVis[node] = false;
         return false;
     }
@@ -19,10 +18,10 @@ class Solution {
 
         for(int i = 0; i < numCourses; i++) adj.add(new ArrayList<>());
 
-        for(int[] edge : prerequisites){
-            int course = edge[0];
-            int prerequisite = edge[1];
-            adj.get(prerequisite).add(course);
+        for(int[] edges : prerequisites){
+            int course = edges[0];
+            int prerequesite = edges[1];
+            adj.get(prerequesite).add(course);
         }
 
         boolean[] vis = new boolean[numCourses];
