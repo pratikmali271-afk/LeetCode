@@ -1,18 +1,4 @@
 class Solution {
-    public boolean dfs(int node, List<List<Integer>> adj, boolean[] vis, boolean[] pathVis){
-        vis[node] = true;
-        pathVis[node] = true;
-
-        for(int neigh : adj.get(node)){
-            if(!vis[neigh]){
-                if(dfs(neigh, adj, vis, pathVis)) return true;
-            }
-            else if(pathVis[neigh]) return true;
-        }
-
-        pathVis[node] = false;
-        return false;
-    }
     public boolean canFinish(int numCourses, int[][] prerequisites) {
         List<List<Integer>> adj = new ArrayList<>();
 
@@ -24,14 +10,32 @@ class Solution {
             adj.get(prerequesite).add(course);
         }
 
-        boolean[] vis = new boolean[numCourses];
-        boolean[] pathVis = new boolean[numCourses];
-
+        int[] indegree = new int[numCourses];
         for(int i = 0; i < numCourses; i++){
-            if(!vis[i]){
-                if(dfs(i, adj, vis, pathVis)) return false;
+            for(int it : adj.get(i)){
+                indegree[it]++;
             }
         }
-        return true;
+
+        Queue<Integer> q = new LinkedList<>();
+        for(int i = 0; i < numCourses; i++){
+            if(indegree[i] == 0) q.add(i);
+        }
+
+        int i = 0;
+        //int[] topoSort = new int[numCourses];
+        List<Integer> topoSort = new ArrayList<>();
+        while(!q.isEmpty()){
+            int node = q.remove();
+            topoSort.add(node);
+
+            for(int it : adj.get(node)){
+                indegree[it]--;
+                if(indegree[it] == 0) q.add(it);
+            }
+        }
+
+        if(topoSort.size() < numCourses) return false;
+        else return true;
     }
 }
