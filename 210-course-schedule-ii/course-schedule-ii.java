@@ -1,40 +1,55 @@
-// Using BFS
+// using DFS
 class Solution {
+    private boolean dfs(int node, boolean[] vis, boolean[] pathVis, Stack<Integer> st, List<List<Integer>> adj) {
+
+        vis[node] = true;
+        pathVis[node] = true;
+
+        for (int neigh : adj.get(node)) {
+            if (!vis[neigh]) {
+                if (!dfs(neigh, vis, pathVis, st, adj)) {
+                    return false;
+                }
+            }
+            else if (pathVis[neigh]) {
+                return false;
+            }
+        }
+        pathVis[node] = false;
+        st.push(node);
+        return true;
+    }
+
     public int[] findOrder(int numCourses, int[][] prerequisites) {
+
         List<List<Integer>> adj = new ArrayList<>();
 
-        for(int i = 0; i < numCourses; i++) adj.add(new ArrayList<>());
-
-        for(int[] edges : prerequisites){
-            int course = edges[0];
-            int prerequesite = edges[1];
-            adj.get(prerequesite).add(course);
+        for (int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] edge : prerequisites) {
+            int course = edge[0];
+            int prerequisite = edge[1];
+            adj.get(prerequisite).add(course);
         }
 
-        int[] indeg = new int[numCourses];
-        for(int i = 0; i < numCourses; i++){
-            for(int it : adj.get(i)) indeg[it]++;
-        }
+        boolean[] vis = new boolean[numCourses];
+        boolean[] pathVis = new boolean[numCourses];
 
-        Queue<Integer> q = new LinkedList<>();
-        for(int i = 0; i < numCourses; i++){
-            if(indeg[i] == 0) q.add(i);
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (!vis[i]) {
+                if (!dfs(i, vis, pathVis, st, adj)) {
+                    return new int[0];
+                }
+            }
         }
 
         int[] topoSort = new int[numCourses];
         int i = 0;
-        while(!q.isEmpty()){
-            int node = q.remove();
-            topoSort[i++] = node;
-
-            for(int it : adj.get(node)){
-                indeg[it]--;
-                if(indeg[it] == 0) q.add(it);
-            }
+        while (!st.isEmpty()) {
+            topoSort[i++] = st.pop();
         }
-        if(i != numCourses) {
-            return new int[0];
-        }
-        return topoSort;    
+        return topoSort;
     }
 }
