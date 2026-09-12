@@ -1,57 +1,56 @@
-class Solution {
-    // public void dfs(int city, int[][] isConnected, boolean[] vis){
-    //     vis[city] = true;
-    //     for(int neighbor = 0; neighbor < isConnected.length; neighbor++){
-    //         if(isConnected[city][neighbor] == 1 && !vis[neighbor]) dfs(neighbor, isConnected, vis);
-    //     }
-    // }
-    // public int findCircleNum(int[][] isConnected) {
-    //     int n = isConnected.length;
-    //     boolean[] vis = new boolean[n];
-    //     int count = 0;
+class DisjointSet{
+    int[] parent;
+    int[] rank;
 
-    //     for(int i = 0; i < n; i++){
-    //         if(!vis[i]){
-    //             count++;
-    //             dfs(i, isConnected, vis);
-    //         }
-    //     }
-    //     return count;
-    // }
-
-    public void dfs(int node, ArrayList<ArrayList<Integer>> adj, boolean[] visited) {
-        visited[node] = true;
-        for (int neighbour : adj.get(node)) {
-            if (!visited[neighbour]) {
-                dfs(neighbour, adj, visited);
-            }
+    DisjointSet(int n){
+        parent = new int[n];
+        rank = new int[n];
+        for(int i = 0; i < n; i++){
+            parent[i] = i;
+            rank[i] = 0;
         }
     }
+
+    int findPar(int u){
+        if(u == parent[u]) return u;
+        int up = findPar(parent[u]);
+        parent[u] = up;
+        return up;
+    }
+
+    void unionByRank(int u, int v){
+        int pu = findPar(u);
+        int pv = findPar(v);
+
+        if(pu == pv) return;
+
+        if(rank[pu] < rank[pv]){
+            parent[pu] = pv;
+        }
+        else if(rank[pv] < rank[pu]){
+            parent[pv] = pu;
+        }
+        else{
+            parent[pv] = pu;
+            rank[pu]++;
+        }
+    }
+}
+class Solution {
     public int findCircleNum(int[][] isConnected) {
         int n = isConnected.length;
-        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        DisjointSet ds = new DisjointSet(n);
 
-        for (int i = 0; i < n; i++) {
-            adj.add(new ArrayList<>());
-        }
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (isConnected[i][j] == 1 && i != j) {
-                    adj.get(i).add(j);
-                }
+        for(int i = 0; i < isConnected.length; i++){
+            for(int j = 0; j < isConnected[0].length; j++){
+                if(isConnected[i][j] == 1) ds.unionByRank(i, j);
             }
         }
 
-        boolean[] visited = new boolean[n];
         int count = 0;
-        for (int i = 0; i < n; i++) {
-            if (!visited[i]) {
-                count++;
-                dfs(i, adj, visited);
-            }
+        for(int i = 0; i < n; i++){
+            if(ds.parent[i] == i) count++;
         }
-
         return count;
     }
 }
