@@ -18,11 +18,11 @@ class DisjointSet{
         return up;
     }
 
-    void unionByRank(int u, int v){
+    boolean unionByRank(int u, int v){
         int pu = findPar(u);
         int pv = findPar(v);
 
-        if(pu == pv) return;
+        if(pu == pv) return false;
 
         if(rank[pu] < rank[pv]){
             parent[pu] = pv;
@@ -34,6 +34,7 @@ class DisjointSet{
             parent[pv] = pu;
             rank[pu]++;
         }
+        return true;
     }
 }
 class Solution {
@@ -41,16 +42,20 @@ class Solution {
         int n = isConnected.length;
         DisjointSet ds = new DisjointSet(n);
 
+        int provinces = n;
+
         for(int i = 0; i < isConnected.length; i++){
             for(int j = 0; j < isConnected[0].length; j++){
-                if(isConnected[i][j] == 1) ds.unionByRank(i, j);
+                if(isConnected[i][j] == 1){
+                    if (ds.unionByRank(i, j)) provinces--;
+                }
             }
         }
 
-        int count = 0;
-        for(int i = 0; i < n; i++){
-            if(ds.parent[i] == i) count++;
-        }
-        return count;
+        // int count = 0;
+        // for(int i = 0; i < n; i++){
+        //     if(ds.parent[i] == i) count++;
+        // }
+        return provinces;
     }
 }
