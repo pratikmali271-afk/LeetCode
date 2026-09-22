@@ -1,35 +1,39 @@
 class Solution {
-    Boolean[][] dp;
+    public boolean canCross(int[] stones) {
+        int n = stones.length;
+        if(stones[1] != 1) return false;
+        Boolean[][] dp = new Boolean[n][n + 1];
 
-    public boolean Solve(int index, int lastJump, int[] stones) {
+        // First jump must be 1
+        dp[1][1] = true;
+        for(int i = 1; i < n; i++) {
+            for(int lastJump = 1; lastJump <= n; lastJump++) {
+                // Frog cannot reach this state
+                if(dp[i][lastJump] == null || !dp[i][lastJump]) continue;
 
-        if(index == stones.length - 1) return true;
+                // Try lastJump - 1, lastJump, lastJump + 1
+                for(int jump = lastJump - 1; jump <= lastJump + 1; jump++) {
+                    if(jump <= 0) continue;
 
-        if(dp[index][lastJump] != null) return dp[index][lastJump];
+                    int nextPosition = stones[i] + jump;
+                    for(int idx = i + 1; idx < n; idx++) {
+                        if(stones[idx] == nextPosition) {
+                            dp[idx][jump] = true;
+                            break;
+                        }
 
-        for(int jump = lastJump - 1; jump <= lastJump + 1; jump++) {
-            if(jump <= 0) continue;
-            int nextPosition = stones[index] + jump;
-
-            // Find the stone having nextPosition
-            for(int i = index + 1; i < stones.length; i++) {
-                if(stones[i] == nextPosition) {
-                    if(Solve(i, jump, stones)) {
-                        return dp[index][lastJump] = true;
+                        if(stones[idx] > nextPosition) break;
                     }
-                    break;
                 }
-                if(stones[i] > nextPosition)
-                    break;
             }
         }
-        return dp[index][lastJump] = false;
-    }
 
-    public boolean canCross(int[] stones) {
-
-        dp = new Boolean[stones.length][stones.length + 1];
-
-        return Solve(0, 0, stones);
+        // Did we reach the last stone?
+        for(int jump = 1; jump <= n; jump++) {
+            if(dp[n - 1][jump] != null && dp[n - 1][jump]) {
+                return true;
+            }
+        }
+        return false;
     }
 }
