@@ -1,20 +1,21 @@
 class Solution {
-    int[] dp;
-    public int Solve(int[] nums, int idx) {
-
-        if(idx >= nums.length) return 0;
-        if(dp[idx] != -1) return dp[idx];
-
-        int rob = nums[idx] + Solve(nums, idx + 2);
-        int skip = Solve(nums, idx + 1);
-
-        dp[idx] = Math.max(rob, skip);
-        return dp[idx];
-    }
-
     public int rob(int[] nums) {
-        dp = new int[nums.length];
-        Arrays.fill(dp, -1);
-        return Solve(nums, 0);
+        int n = nums.length;
+
+        if(n == 1) return nums[0];
+
+        int prev2 = nums[0];
+        int prev = Math.max(nums[0], nums[1]);
+
+        for(int i = 2; i < n; i++) {
+            int rob = nums[i] + prev2;
+            int skip = prev;
+
+            int result = Math.max(rob, skip);
+
+            prev2 = prev;
+            prev = result;
+        }
+        return prev;
     }
 }
