@@ -46,27 +46,31 @@ class Solution {
             idx++;
         }
 
-        int[] dp = new int[nums.length - 1];
-
-        dp[0] = nums1[0];
-        dp[1] = Math.max(nums1[0], nums1[1]);
+        int prev2 = nums1[0];
+        int prev = Math.max(nums1[0], nums1[1]);
         for(int i = 2; i < nums1.length; i++){
-            int rob = nums1[i] + dp[i - 2];
-            int skip = dp[i - 1];
-            dp[i] = Math.max(rob, skip);
+            int rob = nums1[i] + prev2;
+            int skip = prev;
+            int result = Math.max(rob, skip);
+
+            prev2 = prev;
+            prev = result; 
         }
-        int ans1 = dp[nums1.length - 1];
+        int ans1 = prev;
 
-        Arrays.fill(dp, 0);
+        // Arrays.fill(dp, 0);
 
-        dp[0] = nums2[0];
-        dp[1] = Math.max(nums2[0], nums2[1]);
+        prev2 = nums2[0];
+        prev = Math.max(nums2[0], nums2[1]);
         for(int i = 2; i < nums2.length; i++){
-            int rob = nums2[i] + dp[i - 2];
-            int skip = dp[i - 1];
-            dp[i] = Math.max(rob, skip);
+            int rob = nums2[i] + prev2;
+            int skip = prev;
+            int result = Math.max(rob, skip);
+
+            prev2 = prev;
+            prev = result; 
         }
-        int ans2 = dp[nums2.length - 1];
+        int ans2 = prev;
 
         return Math.max(ans1, ans2);
     }
