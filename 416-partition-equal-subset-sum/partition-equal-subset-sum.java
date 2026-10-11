@@ -34,25 +34,36 @@ class Solution {
         }
         if(sum%2 != 0) return false;
 
-        boolean[][] dp = new boolean[nums.length][sum/2 + 1];
+        // boolean[][] dp = new boolean[nums.length][sum/2 + 1];
 
         int target = sum/2;
 
-        for(int i = 0; i < n; i++){
-            dp[i][0] = true;
-        }
+        // for(int i = 0; i < n; i++){
+        //     dp[i][0] = true;
+        // }
+        // if(nums[0] <= target) {
+        //     dp[0][nums[0]] = true;
+        // }
+        boolean[] prev = new boolean[target + 1];
+        prev[0] = true;
         if(nums[0] <= target) {
-            dp[0][nums[0]] = true;
+            prev[nums[0]] = true;
         }
-        for(int idx = 1; idx < n; idx++){
-            for(int t = 0; t <= target; t++){
-                boolean notTake = dp[idx - 1][t];
-                boolean take = false;
-                if(t >= nums[idx]) take = dp[idx - 1][t - nums[idx]];
+        for(int idx = 1; idx < n; idx++) {
+            boolean[] temp = new boolean[target + 1];
+            temp[0] = true;
 
-                dp[idx][t] = notTake || take;
+            for(int t = 1; t <= target; t++) {
+                boolean notTake = prev[t];
+
+                boolean take = false;
+                if(t >= nums[idx]) {
+                    take = prev[t - nums[idx]];
+                }
+                temp[t] = notTake || take;
             }
+            prev = temp;
         }
-        return dp[n - 1][target];
+        return prev[target];
     }
 }
