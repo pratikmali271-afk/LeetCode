@@ -22,26 +22,34 @@ class Solution {
     public int coinChange(int[] coins, int amount) {
         int n = coins.length;
 
-        int[][] dp = new int[n][amount + 1];
+        // int[][] dp = new int[n][amount + 1];
+        int[] prev = new int[amount + 1];
 
-        for(int j = 0; j < amount + 1; j++){
-            if(j%coins[0] == 0) dp[0][j] = j/coins[0];
-            else dp[0][j] = Integer.MAX_VALUE;
-        }
+        // for(int j = 0; j < amount + 1; j++){
+        //     if(j%coins[0] == 0) dp[0][j] = j/coins[0];
+        //     else dp[0][j] = Integer.MAX_VALUE;
+        // }
 
-        for(int idx = 1; idx < n; idx++){
+        for(int idx = 0; idx < n; idx++){
+            int[] temp = new int[amount + 1];
             for(int j = 0; j < amount + 1; j++){
-                int take = Integer.MAX_VALUE;
-                if(coins[idx] <= j) {
-                    int res = dp[idx][j - coins[idx]];
-                    if(res != Integer.MAX_VALUE) take = 1 + res;
-                }
-                int notTake =  dp[idx - 1][j];
+                if(idx == 0){
+                    if(j%coins[0] == 0) temp[j] = j/coins[0];
+                    else temp[j] = Integer.MAX_VALUE;
+                } else{
+                    int take = Integer.MAX_VALUE;
+                    if(coins[idx] <= j) {
+                        int res = temp[j - coins[idx]];
+                        if(res != Integer.MAX_VALUE) take = 1 + res;
+                    }
+                    int notTake =  prev[j];
 
-                dp[idx][j] = Math.min(take, notTake);
+                    temp[j] = Math.min(take, notTake);
+                }
             }
+            prev = temp;
         }
-        int ans = dp[n - 1][amount];
+        int ans = prev[amount];
         return ans == Integer.MAX_VALUE ? -1 : ans;
     }
 }
