@@ -24,24 +24,30 @@ class Solution {
             sq[i] = list.get(i);
         }
 
-        int[][] dp = new int[sq.length][n + 1];
-        for(int i = 0; i <= n; i++){
-            dp[0][i] = i;
-        }
+        // int[][] dp = new int[sq.length][n + 1];
+        // for(int i = 0; i <= n; i++){
+        //     dp[0][i] = i;
+        // }
+        int[] prev = new int[n + 1];
 
-        for(int idx = 1; idx < sq.length; idx++){
+        for(int idx = 0; idx < sq.length; idx++){
+            int[] temp = new int[n + 1];
             for(int target = 0; target <= n; target++){
-                int take = Integer.MAX_VALUE;
-                if(sq[idx] <= target){
-                    take = 1 + dp[idx][target - sq[idx]];
+                if(idx == 0){
+                    temp[target] = target;
+                } else{
+                    int take = Integer.MAX_VALUE;
+                    if(sq[idx] <= target){
+                        take = 1 + temp[target - sq[idx]];
+                    }
+
+                    int notTake = prev[target];
+
+                    temp[target] = Math.min(take, notTake);
                 }
-
-                int notTake = dp[idx - 1][target];
-
-                dp[idx][target] = Math.min(take, notTake);
             }
+            prev = temp;
         }
-
-        return dp[sq.length - 1][n];
+        return prev[n];
     }
 }
