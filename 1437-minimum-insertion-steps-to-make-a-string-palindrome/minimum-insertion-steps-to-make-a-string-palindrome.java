@@ -1,23 +1,27 @@
 class Solution {
-    int[][] dp;
-    public int Solve(int idx1, String text1, int idx2, String text2){
-        if(idx1 < 0 || idx2 < 0) return 0;
-        if(dp[idx1][idx2] != -1) return dp[idx1][idx2];
+    public int longestCommonSubsequence(String text1, String text2) {
+        int m = text1.length();
+        int n = text2.length();
 
-        if(text1.charAt(idx1) == text2.charAt(idx2)) return 1 + Solve(idx1 - 1, text1, idx2 - 1, text2);
-
-        return dp[idx1][idx2] = Math.max(Solve(idx1 - 1, text1, idx2, text2), Solve(idx1, text1, idx2 - 1, text2));
-    }
-    public int longestCommonSubsequence(String text1, String text2){
-        dp = new int[text1.length()][text2.length()];
-        for(int i = 0; i < text1.length(); i++){
-            Arrays.fill(dp[i], -1);
+        int[][] dp = new int[m + 1][n + 1];
+        for(int i = 0; i < m + 1; i++){
+            dp[i][0] = 0;
         }
-        return Solve(text1.length() - 1, text1, text2.length() - 1, text2);
+        for(int i = 0; i < n + 1; i++){
+            dp[0][i] = 0;
+        }
+
+        for(int i = 1; i < m + 1; i++){
+            for(int j = 1; j < n + 1; j++){
+                if(text1.charAt(i - 1) == text2.charAt(j - 1)) dp[i][j] = 1 + dp[i - 1][j - 1];
+                else dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+        return dp[m][n];
     }
-    public int longestPalindromeSubseq(String s){
+    public int longestPalindromeSubseq(String s) {
         String rev = new StringBuilder(s).reverse().toString();
-        return longestCommonSubsequence(s, rev);
+         return longestCommonSubsequence(s, rev);
     }
     public int minInsertions(String s) {
         return s.length() - longestPalindromeSubseq(s);
